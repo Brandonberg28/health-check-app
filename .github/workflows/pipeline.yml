@@ -1,0 +1,32 @@
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+  push:
+    branches: [main]
+
+permissions:
+  checks: write
+  contents: read
+  id-token: write
+  issues: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  pipeline:
+    name: Pipeline
+    uses: coupa-ops/workflows/.github/workflows/calm-pipeline.yml@v0.6.1
+    with:
+      argocd_install_enabled: true
+      checkov_framework: terraform # Only validate terraform code for now
+      ciop_opa_scan_environments: dev # Only run an OPA scan on dev environment for now
+      docker_images: health-check-app:${{ github.sha }}
+      lint_validate_go: false # Default linters are deprecated
+      run_terratest: false
+      ciop_opa_scan_enabled: false
+      terraform_apply_extra_args: '["-var","stage=${process.env.ENVIRONMENT}"]'
+      #terraform_directory: infrastructure
+      #terraform_directory_pr: infrastructure
+      pre_deploy_script: |
+        core.exportVariable("CALM_TOKEN_IMAGE_TAG", '${{ github.sha }}');
+        core.exportVariable("CALM_TOKEN_IMAGE_NAME", "{{metadata.labels.k8s.ccp.io/iam-account-id}}.dkr.ecr.{{metadata.labels.k8s.ccp.io/region}}.amazonaws.com/health-check-app");
