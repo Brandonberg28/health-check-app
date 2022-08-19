@@ -1,0 +1,13 @@
+ccp-svc:
+  # stage: prd
+  # domain: coupahost.com
+  microservice:
+    deploymentAnnotations:
+      link.argocd.argoproj.io/external-link: https://bergado-health-app-2-dev-na10001-101.io.coupahost.com
+    podAnnotations:
+      iam.amazonaws.com/role: "Kube_Application_health_check_app_prd"
+    podEnvironmentVariables:
+      # DOMAIN: coupahost.com
+      # AWSSM_NAME: prd/application/ssm-secret
+      FQDN: bergado-health-app-2-dev-na10001-101.io.coupahost.com
+  default_repo: 269053751455.dkr.ecr.us-east-1.amazonaws.com

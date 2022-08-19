@@ -1,0 +1,11 @@
+---
+# https://helm.sh/docs/topics/charts/
+apiVersion: v2
+name: health-check-app
+version: "1.0.1"
+kubeVersion: ">= 1.19.0-0"
+description: chart to deploy a health-check-app
+dependencies:
+  - name: ccp-svc
+    repository: "oci://ghcr.io/coupa-ops"
+    version: 1.3.1
