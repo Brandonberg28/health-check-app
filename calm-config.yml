@@ -1,0 +1,32 @@
+version: v1
+
+applications:
+  - path: chart
+    baseName: health-check-app
+    ccpClusterAnnotations:
+      - environment: dev
+        name: devkub1483
+    extendedConfig: # Customize any property under `spec` for an ArgoCD Application manifest or `spec.template.spec` for an ArgoCD ApplicationSet
+      source:
+        helm:
+          # "${{ ... }}" patterns will be recognized and replaced by the calm-deploy-action
+          # "{{ ... }}" patterns will be recognized and replaced by the ArgoCD ApplicationSet controller
+          values:
+            global:
+              image: ${{ IMAGE_NAME }}:${{ IMAGE_TAG }}
+              namespace: health-check-app-${{ environment }}
+            ingress:
+              subdomain: io
+            ccp-svc:
+              microservice: 
+                image:
+                  tag: ${{ IMAGE_TAG }}
+              provider:
+                aws:
+                  region: "us-east-1"
+              service:
+                annotations:
+                  host: bergado-health-app-2-dev-{{metadata.labels.k8s.ccp.io/meta-mark}}-{{metadata.labels.k8s.ccp.io/vpc-number}}.io.{{metadata.labels.k8s.ccp.io/domain}}
+          valueFiles:
+            - values/base.yml
+            - values/{{metadata.labels.k8s.ccp.io/environment}}.yml
