@@ -1,8 +1,0 @@
-com/example/restservice/Greeting.class
-com/example/restservice/Health.class
-com/example/restservice/SecretAccessManager.class
-com/example/restservice/RestServiceApplication.class
-com/example/restservice/S3AccessManager.class
-com/example/restservice/package-info.class
-com/example/restservice/HealthController.class
-com/example/restservice/GreetingController.class
